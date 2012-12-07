@@ -17,7 +17,6 @@ Includes request logging and health endpoints
 ```ruby
   class Web < Vault::Web
     helpers Vault::SinatraHelpers::HtmlSerializer
-
   end
 ```
 
@@ -28,7 +27,6 @@ Provides a Stock TestCase and Spec classes to customize.
 To extend your test classes uniformly, use the Vault::
 
 ```ruby
-
 module MyTestHelperClass
   def app; Vault::InvoiceBuilder::Web; end
 end
@@ -36,7 +34,7 @@ end
 Vault::TestHelpers.include_in_all Vault::InvoiceBuilderHelpers
 ```
 
-Now you have an `#app` method in your `Vault::TestCase`s and your `Vault::Spec`s
+Now you have an `#app` method in your `Vault::TestCase` and your `Vault::Spec`
 
 ## Contributing
 

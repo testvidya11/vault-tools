@@ -1,5 +1,6 @@
 require 'minitest/unit'
 require 'minitest/spec'
+require 'rack/test'
 
 # Base class for Vault test cases.
 class Vault::TestCase < MiniTest::Unit::TestCase
