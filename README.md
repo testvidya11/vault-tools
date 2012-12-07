@@ -43,3 +43,7 @@ Now you have an `#app` method in your `Vault::TestCase` and your `Vault::Spec`
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Releasing
+
+    > bundle exec rake release
