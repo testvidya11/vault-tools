@@ -36,7 +36,7 @@ module Vault
     # t - time (integer seconds or milliseconds)
     #
     # Examples
-    #   Log.time()
+    #   Log.time(name, t)
     #   => "measure=true at=web-40"
     #
     # Logs via Scrolls

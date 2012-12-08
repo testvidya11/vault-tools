@@ -10,6 +10,16 @@ Add this line to your application's Gemfile:
 
 ## Usage
 
+### Logging
+
+```ruby
+  Log.time(name, t)
+  #  => "measure=true at=web-40"
+
+  Log.count('foo')
+  #  => "measure=true at=foo"
+```
+
 ### Sinatra Base Class
 
 Includes request logging and health endpoints
@@ -19,22 +29,6 @@ Includes request logging and health endpoints
     helpers Vault::SinatraHelpers::HtmlSerializer
   end
 ```
-
-### Test Base Classes
-
-Provides a Stock TestCase and Spec classes to customize.
-
-To extend your test classes uniformly, use the Vault::
-
-```ruby
-module MyTestHelperClass
-  def app; Vault::InvoiceBuilder::Web; end
-end
-
-Vault::TestHelpers.include_in_all Vault::InvoiceBuilderHelpers
-```
-
-Now you have an `#app` method in your `Vault::TestCase` and your `Vault::Spec`
 
 ## Contributing
 
