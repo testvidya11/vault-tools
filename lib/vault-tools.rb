@@ -14,3 +14,4 @@ end
 require 'vault-tools/sinatra_helpers/html_serializer'
 require 'vault-tools/log'
 require 'vault-tools/web'
+require 'vault-tools/config'
