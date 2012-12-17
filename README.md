@@ -1,12 +1,30 @@
-# Vault Tools
+# Vault::Tools
 
-Tooling for the Heroku Vault team to enable faster bootstrapping for Ruby projects.
+Tooling for the Heroku Vault team to enable faster bootstrapping for
+Ruby projects.
+
+## Setting up a development environment
+
+Install the dependencies:
+
+    bundle install --binstubs vendor/bin
+    rbenv rehash
+
+Run the tests:
+
+    vendor/bin/t
+
+Generate the API documentation:
+
+    vendor/bin/d
+
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
     gem 'vault-tools'
+
 
 ## Usage
 
@@ -20,7 +38,7 @@ Add this line to your application's Gemfile:
   #  => "measure=true at=foo"
 ```
 
-### Sinatra Base Class
+### Sinatra base class
 
 Includes request logging and health endpoints
 
