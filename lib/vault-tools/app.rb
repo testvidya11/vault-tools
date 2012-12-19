@@ -2,6 +2,14 @@ require 'uuidtools'
 
 module Vault
   module App
+    # Convert an app ID into a Heroku app ID.
+    #
+    # @param app_id [Fixnum] An app ID.
+    # @return [String] A Heroku ID that uniquely represents the app.
+    def self.id_to_hid(app_id)
+      "app#{app_id}@heroku.com"
+    end
+
     # Convert an app ID into a v5 UUID.
     #
     # @param app_id [Fixnum] An app ID.

@@ -2,14 +2,19 @@ require 'helper'
 require 'uuidtools'
 
 class AppTest < Vault::TestCase
-  # App.id_to_uuid converts app IDs to a v5 UUID based on a URL scheme.
+  # App.id_to_hid converts an app ID to a Heroku app ID.
+  def test_id_to_hid
+    assert_equal('app1234@heroku.com', Vault::App.id_to_hid(1234))
+  end
+
+  # App.id_to_uuid converts an app ID to a v5 UUID based on a URL scheme.
   def test_id_to_uuid
     url = "https://vault.heroku.com/apps/1234"
     uuid = UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, url).to_s
     assert_equal(uuid, Vault::App.id_to_uuid(1234))
   end
 
-  # App.hid_to_uuid converts Heroku app IDs to a v5 UUID based on a URL
+  # App.hid_to_uuid converts a Heroku app ID to a v5 UUID based on a URL
   # scheme.
   def test_hid_to_uuid
     url = "https://vault.heroku.com/apps/1234"

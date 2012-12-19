@@ -2,14 +2,19 @@ require 'helper'
 require 'uuidtools'
 
 class UserTest < Vault::TestCase
-  # User.id_to_uuid converts user IDs to a v5 UUID based on a URL scheme.
+  # User.id_to_hid converts a user ID to a Heroku user ID.
+  def test_id_to_hid
+    assert_equal('user1234@heroku.com', Vault::User.id_to_hid(1234))
+  end
+
+  # User.id_to_uuid converts a user ID to a v5 UUID based on a URL scheme.
   def test_id_to_uuid
     url = "https://vault.heroku.com/users/1234"
     uuid = UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, url).to_s
     assert_equal(uuid, Vault::User.id_to_uuid(1234))
   end
 
-  # User.hid_to_uuid converts Heroku user IDs to a v5 UUID based on a URL
+  # User.hid_to_uuid converts a Heroku user ID to a v5 UUID based on a URL
   # scheme.
   def test_hid_to_uuid
     url = "https://vault.heroku.com/users/1234"

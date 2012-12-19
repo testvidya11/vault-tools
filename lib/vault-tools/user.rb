@@ -2,6 +2,14 @@ require 'uuidtools'
 
 module Vault
   module User
+    # Convert a user ID into a Heroku user ID.
+    #
+    # @param user_id [Fixnum] A user ID.
+    # @return [String] A Heroku ID that uniquely represents the user.
+    def self.id_to_hid(user_id)
+      "user#{user_id}@heroku.com"
+    end
+
     # Convert a user ID into a v5 UUID.
     #
     # @param user_id [Fixnum] A user ID.
