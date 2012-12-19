@@ -2,9 +2,9 @@ require 'uuidtools'
 
 module Vault
   module User
-    # Convert an user ID into a v5 UUID.
+    # Convert a user ID into a v5 UUID.
     #
-    # @param user_id [Fixnum] An user ID.
+    # @param user_id [Fixnum] A user ID.
     # @return [String] A v5 UUID that uniquely represents the user.
     def self.id_to_uuid(user_id)
       url = "https://vault.heroku.com/users/#{user_id}"
