@@ -15,6 +15,15 @@ class ProductTest < Vault::TestCase
     error = assert_raises(RuntimeError) do
       Vault::Product.name_to_uuid('')
     end
-    assert_equal("Product name can't be empty.", error.message)
+    assert_equal("Product name empty or contains illegal characters.",
+                 error.message)
+  end
+
+  # Product.name_to_uuid raises a RuntimeError if the product name contains
+  # illegal characters.
+  def test_name_to_uuid_with_illegal_characters
+    assert_raises(RuntimeError) { Vault::Product.name_to_uuid('!') }
+    assert_raises(RuntimeError) { Vault::Product.name_to_uuid(' ') }
+    assert_raises(RuntimeError) { Vault::Product.name_to_uuid('A') }
   end
 end
