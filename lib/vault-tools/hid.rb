@@ -7,14 +7,15 @@ module Vault
     # @param heroku_id [String] A Heroku app ID over user ID
     # @raise [ArgumentError] Raised if a malformed Heroku ID is provided.
     # @return [String] A v5 UUID that uniquely represents the app.
-    def self.hid_to_uuid(string)
-      case string
+    def self.hid_to_uuid(heroku_id)
+      case heroku_id
       when /^user/
-        User.hid_to_uuid(string)
+        User.hid_to_uuid(heroku_id)
       when /^app/
-        App.hid_to_uuid(string)
+        App.hid_to_uuid(heroku_id)
       else
-        raise ArgumentError, "#{string} is not a valid Heroku app or user ID."
+        raise ArgumentError, "#{heroku_id} is not a valid Heroku app or " +
+                             "user ID."
       end
     end
   end
