@@ -60,5 +60,7 @@ class ConfigTest < Vault::TestCase
     assert Vault::Config.enable_ssl?
     set_env 'VAULT_TOOLS_DISABLE_SSL', '1'
     refute Vault::Config.enable_ssl?
+    set_env 'VAULT_TOOLS_DISABLE_SSL', 'foo'
+    refute Vault::Config.enable_ssl?
   end
 end
