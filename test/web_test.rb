@@ -5,7 +5,18 @@ class WebTest < Vault::TestCase
 
   # Anonymous Web Frontend
   def app
-    @app ||= Class.new(Vault::Web)
+    Class.new(Vault::Web)
+  end
+
+  def setup
+    super
+    reload_web!
+  end
+
+  def reload_web!
+    # remove the constant to force a clean reload
+    Vault.send(:remove_const, 'Web')
+    load 'lib/vault-tools/web.rb'
   end
 
   # A successful request causes a `web-20` log entry to be written.
@@ -43,5 +54,23 @@ class WebTest < Vault::TestCase
     assert_match(/^RuntimeError: An expected error occurred.$/m,
                  last_response.body)
     assert_equal(500, last_response.status)
+  end
+
+
+  # SSL is enforced when we are in production mode
+  def test_ssl_enforced_in_production_mode
+    set_env 'RACK_ENV', 'production'
+    reload_web!
+    get '/health'
+    assert_equal(301, last_response.status)
+    assert_match(/^https/, last_response.headers['Location'])
+  end
+
+  def test_ssl_can_be_disabled
+    set_env 'RACK_ENV', 'production'
+    set_env 'VAULT_TOOLS_DISABLE_SSL', 'anything'
+    reload_web!
+    get '/health'
+    assert_equal(200, last_response.status)
   end
 end
