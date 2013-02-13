@@ -25,7 +25,7 @@ module Vault
     set :raise_errors, false
 
     # Require HTTPS connections when production mode is enabled.
-    use Rack::SslEnforcer if ENV['RACK_ENV'].eql?('production')
+    use Rack::SslEnforcer if (Config.enable_ssl? && Config.production?)
 
     # Return an *HTTP 500 Internal Server Error* with a traceback in the
     # body for easy debugging of errors.

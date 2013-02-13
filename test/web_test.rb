@@ -8,11 +8,15 @@ class WebTest < Vault::TestCase
     Class.new(Vault::Web)
   end
 
+  # Always reload the web class to eliminate test leakage
   def setup
     super
     reload_web!
   end
 
+  # middleware is attached at load time, so we have to
+  # delete the web class and reload it to simulate being
+  # loaded with a given ENV
   def reload_web!
     # remove the constant to force a clean reload
     Vault.send(:remove_const, 'Web')
