@@ -1,20 +1,12 @@
 require 'helper'
 
-# A fake web API frontend for use in tests.
-class WebFake < Vault::Web
-end
-
-# Helper uses Rack's test mode to serve our fake web API frontend in tests.
-module WebHelper
+class WebTest < Vault::TestCase
   include Rack::Test::Methods
 
+  # Anonymous Web Frontend
   def app
-    WebFake
+    @app ||= Class.new(Vault::Web)
   end
-end
-
-class WebTest < Vault::TestCase
-  include WebHelper
 
   # A successful request causes a `web-20` log entry to be written.
   def test_head_status_check
