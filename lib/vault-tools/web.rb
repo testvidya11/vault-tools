@@ -65,7 +65,7 @@ module Vault
     #   - *HTTP 500 Internal Server Error*: Returned with a traceback in the
     #     body.
     get '/boom' do
-      raise "An expected unexpected error occurred."
+      raise "An expected error occurred."
     end
   end
 end

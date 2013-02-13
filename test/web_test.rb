@@ -48,7 +48,7 @@ class WebTest < Vault::TestCase
     get '/boom'
     assert_match(/measure=true/, Scrolls.stream.string)
     assert_match(/at=web-50/, Scrolls.stream.string)
-    assert_match(/^RuntimeError: An expected unexpected error occurred.$/m,
+    assert_match(/^RuntimeError: An expected error occurred.$/m,
                  last_response.body)
     assert_equal(500, last_response.status)
   end
