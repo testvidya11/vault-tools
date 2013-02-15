@@ -1,4 +1,8 @@
 # Rake tasks for Core DB
+#
+# include in Rakefile via:
+#
+# require 'vault-tools/core_db_tasks'
 
 desc "Pull db/structure.sql from core HEAD"
 task :pull_core do
