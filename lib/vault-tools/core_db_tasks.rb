@@ -14,6 +14,8 @@ task :pull_core do
   steps << 'git clone -n git@github.com:heroku/core --depth 1'
   steps << 'cd core'
   steps << 'git checkout HEAD db/structure.sql'
+  # make sure we don't submodule it
+  steps << 'rm -rf .git'
   sh steps.join(' && ')
 end
 
