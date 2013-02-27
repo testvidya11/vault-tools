@@ -3,6 +3,13 @@ require 'uuidtools'
 
 class HIDTest < Vault::TestCase
 
+  # HID.hid? is true(ish) when given HIDs and false(ish) when not
+  def test_hid?
+    assert_equal(:user, Vault::HID.hid?('user1@heroku.com'))
+    assert_equal(:app, Vault::HID.hid?('app123@heroku.com'))
+    refute Vault::HID.hid?('employee@heroku.com')
+  end
+
   # HID.hid_to_uuid converts an app ID to a v5 UUID based on a URL scheme.
   def test_app_id_to_uuid
     url = "https://vault.heroku.com/apps/1234"

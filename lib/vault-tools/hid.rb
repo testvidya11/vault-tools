@@ -2,6 +2,9 @@ require 'uuidtools'
 
 module Vault
   module HID
+    USER_HID_REGEX = /\Auser(\d+)@heroku.com/
+    APP_HID_REGEX  = /\Aapp(\d+)@heroku.com/
+
     # Convert a Heroku app ID or user ID into a v5 UUID.
     #
     # @param heroku_id [String] A Heroku app ID or user ID.
@@ -16,6 +19,13 @@ module Vault
       else
         raise ArgumentError, "#{heroku_id} is not a valid Heroku app or " +
                              "user ID."
+      end
+    end
+
+    def self.hid?(string)
+      case string
+      when APP_HID_REGEX; :app;
+      when USER_HID_REGEX; :user;
       end
     end
   end
