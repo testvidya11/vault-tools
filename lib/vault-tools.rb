@@ -5,10 +5,31 @@ require 'scrolls'
 require 'rack/ssl-enforcer'
 
 module Vault
+  #require bundler and the proper gems for the ENV
   def self.require
     Kernel.require 'bundler'
-    STDERR.puts "Loading #{ENV['RACK_ENV']} environment..."
+    $stderr.puts "Loading #{ENV['RACK_ENV']} environment..."
     Bundler.require :default, ENV['RACK_ENV'].to_sym
+  end
+
+  # adds ./lib dir to the load path
+  def self.load_path
+    $stderr.puts "Adding './lib' to path..."
+    $LOAD_PATH.unshift(File.expand_path('./lib'))
+  end
+
+  # sets TZ to UTC and Sequel timezone to :utc
+  def self.set_timezones
+    $stderr.puts "Setting timezones to UTC..."
+    Sequel.default_timezone = :utc if defined? Sequel
+    ENV['TZ'] = 'UTC'
+  end
+
+  # all in one go
+  def self.setup
+    self.require
+    self.load_path
+    self.set_timezones
   end
 end
 
