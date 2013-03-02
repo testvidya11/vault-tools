@@ -1,7 +1,6 @@
 require 'helper'
 
 class ConfigTest < Vault::TestCase
-
   # Config.production? is true when RACK_ENV=production
   def test_production_mode
     set_env 'RACK_ENV', nil

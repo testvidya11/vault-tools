@@ -12,7 +12,8 @@ module Vault
     #
     # Logs via Scrolls
     def count(name)
-      log(measure: true, at: name)
+      name = "#{Config.app_name}.#{name}" if Config.app_name
+      log(measure: name)
     end
 
     # Public: logs an HTTP status code

@@ -14,9 +14,9 @@ class WebTest < Vault::TestCase
     reload_web!
   end
 
-  # middleware is attached at load time, so we have to
-  # delete the web class and reload it to simulate being
-  # loaded with a given ENV
+  # Middleware is attached at load time, so we have to delete the Vault::Web
+  # class and reload it to simulate being loaded with different environment
+  # variables.
   def reload_web!
     # remove the constant to force a clean reload
     Vault.send(:remove_const, 'Web')
@@ -64,15 +64,18 @@ class WebTest < Vault::TestCase
   # SSL is enforced when we are in production mode
   def test_ssl_enforced_in_production_mode
     set_env 'RACK_ENV', 'production'
+    set_env 'VAULT_TOOLS_DISABLE_SSL', nil
     reload_web!
     get '/health'
     assert_equal(301, last_response.status)
     assert_match(/^https/, last_response.headers['Location'])
   end
 
+  # SSL isn't enforced when the VAULT_TOOLS_DISABLE_SSL environment variable
+  # has a true value.
   def test_ssl_can_be_disabled
     set_env 'RACK_ENV', 'production'
-    set_env 'VAULT_TOOLS_DISABLE_SSL', 'anything'
+    set_env 'VAULT_TOOLS_DISABLE_SSL', '1'
     reload_web!
     get '/health'
     assert_equal(200, last_response.status)
