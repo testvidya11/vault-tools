@@ -7,6 +7,10 @@ module Vault
       heroku.get_config_vars(app).body[env]
     end
 
+    def core_follower_url
+      remote_env('vault-core-follower', 'DATABASE_URL')
+    end
+
     def env(key)
       ENV[key]
     end
