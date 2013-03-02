@@ -2,6 +2,11 @@ module Vault
   module Config
     extend self
 
+    def remote_env(app, env)
+      heroku = Heroku::API.new
+      heroku.get_config_vars(app).body[env]
+    end
+
     def env(key)
       ENV[key]
     end
