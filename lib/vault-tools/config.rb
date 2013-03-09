@@ -47,5 +47,9 @@ module Vault
     def int(key)
       env(key) ? env(key).to_i : nil
     end
+
+    def sidekiq_concurrency
+      int('SIDEKIQ_CONCURRENCY') || 25
+    end
   end
 end

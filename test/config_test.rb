@@ -83,4 +83,10 @@ class ConfigTest < Vault::TestCase
       assert_equal('postgres:///foo', Vault::Config.remote_env('app', 'DATABASE_URL'))
     end
   end
+
+  def test_sidekiq_concurrency
+    assert_equal(25, Vault::Config.sidekiq_concurrency)
+    set_env 'SIDEKIQ_CONCURRENCY', '10'
+    assert_equal(10, Vault::Config.sidekiq_concurrency)
+  end
 end
