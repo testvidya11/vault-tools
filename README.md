@@ -1,6 +1,7 @@
 # Vault::Tools
 
-Tools is the English word for ツール.  Tooling for the Heroku Vault
+Tools is the English word for ツール.  This gem consisits of
+tools for the Heroku Vault
 team to enable faster bootstrapping for Ruby projects.
 
 "Unless you're makin some awful, piece-of-shit rails app, then you can probably use these tools." - Matt Conway
