@@ -26,6 +26,6 @@ task :create_shushu_db => [:drop_shushu_db, :pull_shushu] do
 end
 
 desc "Drop the vault-usage-test, core-test and shushu-test databases"
-task :drop_core_db do
+task :drop_shushu_db do
   sh 'dropdb shushu-test || true'
 end
