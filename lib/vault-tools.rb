@@ -26,11 +26,19 @@ module Vault
     ENV['TZ'] = 'UTC'
   end
 
+  def self.hack_time_class
+    $stderr.puts "Modifying Time#to_s to use #iso8601"
+    class ::Time
+      def to_s; self.iso8601; end
+    end
+  end
+
   # all in one go
   def self.setup
     self.require
     self.load_path
     self.set_timezones
+    self.hack_time_class
   end
 end
 
