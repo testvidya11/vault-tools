@@ -28,8 +28,9 @@ module Vault
 
   def self.hack_time_class
     $stderr.puts "Modifying Time#to_s to use #iso8601"
-    class ::Time
-      def to_s; self.iso8601; end
+    # use send to call private method
+    Time.send(:define_method, :to_s) do
+      self.iso8601
     end
   end
 
