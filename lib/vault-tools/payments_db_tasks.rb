@@ -13,13 +13,13 @@ task :pull_payments do
   sh steps.join(' && ')
 end
 
-desc "Drop and create vault-usage-test, payments-test and shushu-test databases"
+desc "Drop and recreate payments-test database"
 task :create_payments_db => [:drop_payments_db, :pull_payments] do
   sh 'createdb payments-test'
   sh 'psql payments-test -f contrib/payments/db/structure.sql'
 end
 
-desc "Drop the vault-usage-test, payments-test and shushu-test databases"
+desc "Drop the payments-test database"
 task :drop_payments_db do
   sh 'dropdb payments-test || true'
 end
