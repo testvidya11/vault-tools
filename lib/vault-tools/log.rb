@@ -36,8 +36,8 @@ module Vault
         name.gsub(/\/:\w+/, '').           # Remove param names from path.
              gsub("/", "_").               # Replace slash with underscore.
              gsub(/[^A-Za-z0-9\-\_]/, ''). # Only keep subset of chars.
-             slice(1..-1).
-             tap { |name| log(measure: name, val: duration) }
+             slice(1..-1).                 # Strip the leading underscore.
+             tap { |name| log("measure##{name}" => "#{duration}ms") }
       end
     end
 

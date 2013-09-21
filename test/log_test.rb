@@ -41,22 +41,19 @@ class LogTest < Vault::TestCase
   # It converts slashes to underscores.
   def test_time_replaces_slash_with_underscore
     Vault::Log.time('/some/web/path', 123.4)
-    assert_match(/measure=some_web_path val=123.400/, Scrolls.stream.string)
-    assert_match(/val=123.4/, Scrolls.stream.string)
+    assert_match(/measure#some_web_path=123.4ms/, Scrolls.stream.string)
   end
 
   # Vault::Log.time removes parameters.
   def test_time_removes_parameters
     Vault::Log.time('/some/:web/path', 123.4)
-    assert_match(/measure=some_path val=123.400/, Scrolls.stream.string)
-    assert_match(/val=123.4/, Scrolls.stream.string)
+    assert_match(/measure#some_path=123.4ms/, Scrolls.stream.string)
   end
 
   # Vault::Log.time removes non-alphanumeric characters.
   def test_time_removes_non_alphanumeric_characters
     Vault::Log.time('/some/web+path', 123.4)
-    assert_match(/measure=some_webpath val=123.400/, Scrolls.stream.string)
-    assert_match(/val=123.4/, Scrolls.stream.string)
+    assert_match(/measure#some_webpath=123.4ms/, Scrolls.stream.string)
   end
 
   # Vault::Log.time is a no-op if a nil name is provided.
