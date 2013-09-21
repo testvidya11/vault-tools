@@ -6,7 +6,7 @@ class LogTest < Vault::TestCase
   def test_count
     set_env('APP_NAME', nil)
     Vault::Log.count('countable')
-    assert_match(/measure=countable/, Scrolls.stream.string)
+    assert_match(/count#countable=1/, Scrolls.stream.string)
   end
 
   # Vault::Log.count emits a metric that represents a countable event.  If an
@@ -15,7 +15,7 @@ class LogTest < Vault::TestCase
   def test_count_with_app_name
     set_env('APP_NAME', 'vault_app')
     Vault::Log.count('countable')
-    assert_match(/measure=vault_app.countable/, Scrolls.stream.string)
+    assert_match(/count#vault_app.countable=1/, Scrolls.stream.string)
   end
 
   # Vault::Log.count_status emits metrics to measure HTTP responses.  The
@@ -23,8 +23,8 @@ class LogTest < Vault::TestCase
   def test_count_status
     set_env('APP_NAME', nil)
     Vault::Log.count_status(201)
-    assert_match(/measure=http_201/, Scrolls.stream.string)
-    assert_match(/measure=http_2xx/, Scrolls.stream.string)
+    assert_match(/count#http_201=1/, Scrolls.stream.string)
+    assert_match(/count#http_2xx=1/, Scrolls.stream.string)
   end
 
   # Vault::Log.count_status emits metrics to measure HTTP responses.  If an
@@ -33,8 +33,8 @@ class LogTest < Vault::TestCase
   def test_count_status_with_app_name
     set_env('APP_NAME', 'vault_app')
     Vault::Log.count_status(201)
-    assert_match(/measure=vault_app.http_201/, Scrolls.stream.string)
-    assert_match(/measure=vault_app.http_2xx/, Scrolls.stream.string)
+    assert_match(/count#vault_app.http_201=1/, Scrolls.stream.string)
+    assert_match(/count#vault_app.http_2xx=1/, Scrolls.stream.string)
   end
 
   # Vault::Log.time emits a metric to measure the duration of an HTTP request.

@@ -5,7 +5,7 @@ module Vault
     # @param name [String] The name of the metric.
     def self.count(name)
       name = "#{Config.app_name}.#{name}" if Config.app_name
-      log(measure: name)
+      log("count##{name}" => 1)
     end
 
     # Log an HTTP status code.  Two log metrics are written each time this
