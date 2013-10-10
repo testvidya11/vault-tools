@@ -22,5 +22,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'uuidtools'
   gem.add_dependency 'rack-ssl-enforcer'
   gem.add_dependency 'heroku-api'
-  gem.add_dependency 'fernet'
+  gem.add_dependency 'fernet', '2.0.rc2'
 end
