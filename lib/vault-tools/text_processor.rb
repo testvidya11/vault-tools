@@ -1,7 +1,7 @@
 require 'fernet'
 
 module Vault::Tools
-  module TextStorage
+  module TextEnc
     FERNET_ENCODE = lambda { |string|
       secret = ENV['FERNET_SECRET']
       Fernet.generate(secret, string)
@@ -27,14 +27,22 @@ module Vault::Tools
       dst
     }
 
-    class NonPrivateWrite < Vault::Pipeline
+    class Write < Vault::Pipeline
       use DEFLATE
       use FERNET_ENCODE
     end
 
-    class NonPrivateRead < Vault::Pipeline
+    class Read < Vault::Pipeline
       use FERNET_DECODE
       use INFLATE
+    end
+
+    def self.write(string)
+      Write.process(string)
+    end
+
+    def self.read(string)
+      Read.process(string)
     end
   end
 end
