@@ -7,10 +7,6 @@ class LogTest < Vault::TestCase
     set_env('APP_DEPLOY', 'test-deploy')
   end
 
-  def logged_data
-    Hash[Scrolls.stream.string.split(/\s+/).map {|p| p.split('=') }]
-  end
-
   # Vault::Log.count emits a metric, using the specified name, that represents
   # a countable event.
   def test_count
