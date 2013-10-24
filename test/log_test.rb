@@ -86,8 +86,12 @@ class LogTest < Vault::TestCase
   # specified hash.
   def test_log
     Vault::Log.log(integer: 123, float: 123.4, string: 'string', bool: false)
-    assert_match(/integer=123 float=123.400 string=string bool=false/,
-                 Scrolls.stream.string)
+    assert_equal 'test-deploy', logged_data['source']
+    assert_equal '123',     logged_data['integer']
+    assert_equal '123.400', logged_data['float']
+    assert_equal 'string',  logged_data['string']
+    assert_equal 'false',   logged_data['bool']
+    assert_equal '123.400', logged_data['float']
   end
 
   # Vault::Log.log can be used to measure the time spent in a block.
@@ -95,7 +99,9 @@ class LogTest < Vault::TestCase
     Vault::Log.log(A: true) do
       Vault::Log.log(B: true)
     end
-    assert_match(/A=true at=start\nB=true\nA=true at=finish elapsed=0/,
-                 Scrolls.stream.string)
+    assert_equal 'true', logged_data['A']
+    assert_equal 'true', logged_data['B']
+    assert_equal 'test-deploy', logged_data['source']
+    assert_match /\d/, logged_data['elapsed']
   end
 end

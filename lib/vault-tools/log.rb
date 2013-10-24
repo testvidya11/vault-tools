@@ -6,7 +6,7 @@ module Vault
     # @param value [Integer] The number of items counted. Can be suffixed with a unit.
     # @param extra_data [Hash] Optional extra data to log.
     def self.count(name, value = 1, extra_data = {})
-      log(extra_data.merge("count##{Config.app_name}.#{name}" => value, "source" => Config.app_deploy))
+      log(extra_data.merge("count##{Config.app_name}.#{name}" => value))
     end
 
     # Log an HTTP status code.  Two log metrics are written each time this
@@ -33,7 +33,7 @@ module Vault
     # @param value [Float] Value for the metric. A unit may be appended.
     # @param extra_data [Hash] Optional extra data to log.
     def self.measure(name, value, extra_data = {})
-      log(extra_data.merge("measure##{Config.app_name}.#{name}" => value, "source" => Config.app_deploy))
+      log(extra_data.merge("measure##{Config.app_name}.#{name}" => value))
     end
 
     # Log a timing metric.
@@ -57,6 +57,7 @@ module Vault
     # @param block [Proc] Optionally, a block of code to run before writing
     #   the log message.
     def self.log(data, &block)
+      data['source'] ||= Config.app_deploy if Config.app_deploy
       Scrolls.log(data, &block)
     end
   end
