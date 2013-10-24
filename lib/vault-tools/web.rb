@@ -37,7 +37,7 @@ module Vault
     # Log details about the request including how long it took.
     after do
       Log.count_status(response.status)
-      Log.time("http.#{@action}", Time.now - @start_request)
+      Log.time("http.#{@action}", (Time.now - @start_request) * 1000)
     end
 
     # Make sure error handler blocks are invoked in tests.
