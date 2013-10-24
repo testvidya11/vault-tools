@@ -11,6 +11,8 @@ class WebTest < Vault::TestCase
   # Always reload the web class to eliminate test leakage
   def setup
     super
+    set_env('APP_NAME', 'test-app')
+    set_env('APP_DEPLOY', 'testing')
     reload_web!
   end
 
@@ -42,8 +44,8 @@ class WebTest < Vault::TestCase
   # requests.
   def test_head_status_check
     head '/'
-    assert_match(/count#http_200=1/, Scrolls.stream.string)
-    assert_match(/count#http_2xx=1/, Scrolls.stream.string)
+    assert_equal '1', logged_data['count#test-app.http.200']
+    assert_equal '1', logged_data['count#test-app.http.2xx']
     assert_equal(200, last_response.status)
   end
 
@@ -51,8 +53,8 @@ class WebTest < Vault::TestCase
   # response body.
   def test_get_health_check
     get '/health'
-    assert_match(/count#http_200=1/, Scrolls.stream.string)
-    assert_match(/count#http_2xx=1/, Scrolls.stream.string)
+    assert_equal '1', logged_data['count#test-app.http.200']
+    assert_equal '1', logged_data['count#test-app.http.2xx']
     assert_equal(200, last_response.status)
     assert_equal('OK', last_response.body)
   end
@@ -61,8 +63,8 @@ class WebTest < Vault::TestCase
   # match a known resource.
   def test_head_with_unknown_endpoint
     head '/unknown'
-    assert_match(/count#http_404=1/, Scrolls.stream.string)
-    assert_match(/count#http_4xx=1/, Scrolls.stream.string)
+    assert_equal '1', logged_data['count#test-app.http.404']
+    assert_equal '1', logged_data['count#test-app.http.4xx']
     assert_equal(404, last_response.status)
   end
 
@@ -70,8 +72,8 @@ class WebTest < Vault::TestCase
   # traceback is also written to the response body to ease debugging.
   def test_error_logs_500
     get '/boom'
-    assert_match(/count#http_500=1/, Scrolls.stream.string)
-    assert_match(/count#http_5xx=1/, Scrolls.stream.string)
+    assert_equal '1', logged_data['count#test-app.http.500']
+    assert_equal '1', logged_data['count#test-app.http.5xx']
     assert_match(/^RuntimeError: An expected error occurred.$/m,
                  last_response.body)
     assert_equal(500, last_response.status)

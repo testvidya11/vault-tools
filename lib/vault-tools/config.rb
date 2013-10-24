@@ -28,7 +28,11 @@ module Vault
     end
 
     def app_name
-      env("APP_NAME")
+      env!("APP_NAME")
+    end
+
+    def app_deploy
+      env!("APP_DEPLOY")
     end
 
     def port

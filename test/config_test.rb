@@ -39,9 +39,13 @@ class ConfigTest < Vault::TestCase
   # Vault::Config.app_name returns the value of the APP_NAME environment
   # variable.
   def test_app_name
-    Vault::Config.app_name.must_equal nil
     set_env 'APP_NAME', "my-app"
     Vault::Config.app_name.must_equal 'my-app'
+  end
+
+  def test_app_deploy
+    set_env 'APP_DEPLOY', "test"
+    Vault::Config.app_deploy.must_equal 'test'
   end
 
   def test_port_raises
