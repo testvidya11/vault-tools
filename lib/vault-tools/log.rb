@@ -27,6 +27,15 @@ module Vault
       end
     end
 
+    # Log a measurement.
+    #
+    # @param name [String] The name of the metric.
+    # @param value [Float] Value for the metric. A unit may be appended.
+    # @param extra_data [Hash] Optional extra data to log.
+    def self.measure(name, value, extra_data = {})
+      log(extra_data.merge("measure##{Config.app_name}.#{name}" => value, "source" => Config.app_deploy))
+    end
+
     # Log a timing metric.
     #
     # @param name [String] A Sinatra-formatted route URL.

@@ -22,9 +22,8 @@ class LogTest < Vault::TestCase
   end
 
   def test_count_with_extra_data
-    Vault::Log.count('countable', 1, "request_id" => "abc")
+    Vault::Log.count('countable', 1, 'request_id' => 'abc')
     assert_equal '1', logged_data['count#test-app.countable']
-    assert_equal 'test-deploy', logged_data['source']
     assert_equal 'abc', logged_data['request_id']
   end
 
@@ -33,6 +32,24 @@ class LogTest < Vault::TestCase
     Vault::Log.count_status(201)
     assert_equal '1', logged_data['count#test-app.http.201']
     assert_equal '1', logged_data['count#test-app.http.2xx']
+    assert_equal 'test-deploy', logged_data['source']
+  end
+
+  def test_measure
+    Vault::Log.measure('thinking', 123.4)
+    assert_equal '123.400', logged_data['measure#test-app.thinking']
+    assert_equal 'test-deploy', logged_data['source']
+  end
+
+  def test_measure_with_units
+    Vault::Log.measure('thinking', '123.4ms')
+    assert_equal '123.4ms', logged_data['measure#test-app.thinking']
+  end
+
+  def test_measure_with_extra_data
+    Vault::Log.measure('thinking', '123.4', 'request_id' => 'abc')
+    assert_equal '123.4', logged_data['measure#test-app.thinking']
+    assert_equal 'abc', logged_data['request_id']
   end
 
   def test_time
