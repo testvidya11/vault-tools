@@ -15,6 +15,19 @@ class LogTest < Vault::TestCase
     assert_equal 'test-deploy', logged_data['source']
   end
 
+  def test_count_with_specified_value
+    Vault::Log.count('countable', 5)
+    assert_equal '5', logged_data['count#test-app.countable']
+    assert_equal 'test-deploy', logged_data['source']
+  end
+
+  def test_count_with_extra_data
+    Vault::Log.count('countable', 1, "request_id" => "abc")
+    assert_equal '1', logged_data['count#test-app.countable']
+    assert_equal 'test-deploy', logged_data['source']
+    assert_equal 'abc', logged_data['request_id']
+  end
+
   # Vault::Log.count_status emits metrics to measure HTTP responses.
   def test_count_status
     Vault::Log.count_status(201)

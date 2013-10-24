@@ -3,8 +3,10 @@ module Vault
     # Log a count metric.
     #
     # @param name [String] The name of the metric.
-    def self.count(name)
-      log("count##{Config.app_name}.#{name}" => 1, "source" => Config.app_deploy)
+    # @param value [Integer] The number of items counted. Can be suffixed with a unit.
+    # @param extra_data [Hash] Optional extra data to log.
+    def self.count(name, value = 1, extra_data = {})
+      log(extra_data.merge("count##{Config.app_name}.#{name}" => value, "source" => Config.app_deploy))
     end
 
     # Log an HTTP status code.  Two log metrics are written each time this

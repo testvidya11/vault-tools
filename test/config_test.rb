@@ -45,7 +45,7 @@ class ConfigTest < Vault::TestCase
 
   def test_app_deploy
     set_env 'APP_DEPLOY', "test"
-    Vault::Config.app_name.must_equal 'test'
+    Vault::Config.app_deploy.must_equal 'test'
   end
 
   def test_port_raises
