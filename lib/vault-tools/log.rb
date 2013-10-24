@@ -39,15 +39,14 @@ module Vault
     # Log a timing metric.
     #
     # @param name [String] A Sinatra-formatted route URL.
-    # @param duration [Fixnum] The duration to record, in seconds or
-    #   milliseconds.
+    # @param duration [Fixnum] The duration to record, in milliseconds.
     def self.time(name, duration)
       if name
         name.gsub(/\/:\w+/, '').           # Remove param names from path.
              gsub("/", "-").               # Replace slash with dash.
              gsub(/[^A-Za-z0-9\-\_]/, ''). # Only keep subset of chars.
              sub(/^-/, "").                # Strip the leading dash.
-             tap { |name| log("measure##{Config.app_name}.#{name}" => "#{duration}ms", "source" => Config.app_deploy) }
+             tap { |name| measure(name, "#{duration}ms") }
       end
     end
 
