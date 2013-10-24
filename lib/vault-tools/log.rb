@@ -4,8 +4,7 @@ module Vault
     #
     # @param name [String] The name of the metric.
     def self.count(name)
-      name = "#{Config.app_name}.#{name}" if Config.app_name
-      log("count##{name}" => 1)
+      log("count##{Config.app_name}.#{name}" => 1, "source" => Config.app_deploy)
     end
 
     # Log an HTTP status code.  Two log metrics are written each time this
@@ -20,9 +19,9 @@ module Vault
     #
     # @param status [Fixnum] The HTTP status code to record.
     def self.count_status(status)
-      count("http_#{status}")
+      count("http.#{status}")
       if status_prefix = status.to_s.match(/\d/)[0]
-        count("http_#{status_prefix}xx")
+        count("http.#{status_prefix}xx")
       end
     end
 
@@ -34,10 +33,10 @@ module Vault
     def self.time(name, duration)
       if name
         name.gsub(/\/:\w+/, '').           # Remove param names from path.
-             gsub("/", "_").               # Replace slash with underscore.
+             gsub("/", "-").               # Replace slash with dash.
              gsub(/[^A-Za-z0-9\-\_]/, ''). # Only keep subset of chars.
-             slice(1..-1).                 # Strip the leading underscore.
-             tap { |name| log("measure##{name}" => "#{duration}ms") }
+             sub(/^-/, "").                # Strip the leading dash.
+             tap { |name| log("measure##{Config.app_name}.#{name}" => "#{duration}ms", "source" => Config.app_deploy) }
       end
     end
 

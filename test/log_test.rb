@@ -1,59 +1,53 @@
 require 'helper'
 
 class LogTest < Vault::TestCase
+  def setup
+    super
+    set_env('APP_NAME', 'test-app')
+    set_env('APP_DEPLOY', 'test-deploy')
+  end
+
+  def logged_data
+    Hash[Scrolls.stream.string.split(/\s+/).map {|p| p.split('=') }]
+  end
+
   # Vault::Log.count emits a metric, using the specified name, that represents
   # a countable event.
   def test_count
-    set_env('APP_NAME', nil)
     Vault::Log.count('countable')
-    assert_match(/count#countable=1/, Scrolls.stream.string)
+    assert_equal '1', logged_data['count#test-app.countable']
+    assert_equal 'test-deploy', logged_data['source']
   end
 
-  # Vault::Log.count emits a metric that represents a countable event.  If an
-  # APP_NAME environment variable is available it will be prepended to the
-  # measurement name.
-  def test_count_with_app_name
-    set_env('APP_NAME', 'vault_app')
-    Vault::Log.count('countable')
-    assert_match(/count#vault_app.countable=1/, Scrolls.stream.string)
-  end
-
-  # Vault::Log.count_status emits metrics to measure HTTP responses.  The
-  # exact HTTP status, and the status family, are recorded.
+  # Vault::Log.count_status emits metrics to measure HTTP responses.
   def test_count_status
-    set_env('APP_NAME', nil)
     Vault::Log.count_status(201)
-    assert_match(/count#http_201=1/, Scrolls.stream.string)
-    assert_match(/count#http_2xx=1/, Scrolls.stream.string)
+    assert_equal '1', logged_data['count#test-app.http.201']
+    assert_equal '1', logged_data['count#test-app.http.2xx']
   end
 
-  # Vault::Log.count_status emits metrics to measure HTTP responses.  If an
-  # APP_NAME environment variable is available it will be prepended to the
-  # measurement name.
-  def test_count_status_with_app_name
-    set_env('APP_NAME', 'vault_app')
-    Vault::Log.count_status(201)
-    assert_match(/count#vault_app.http_201=1/, Scrolls.stream.string)
-    assert_match(/count#vault_app.http_2xx=1/, Scrolls.stream.string)
+  def test_time
+    Vault::Log.time('thinking', 123.4)
+    assert_equal '123.4ms', logged_data['measure#test-app.thinking']
   end
 
   # Vault::Log.time emits a metric to measure the duration of an HTTP request.
   # It converts slashes to underscores.
-  def test_time_replaces_slash_with_underscore
+  def test_time_replaces_slash_with_dash
     Vault::Log.time('/some/web/path', 123.4)
-    assert_match(/measure#some_web_path=123.4ms/, Scrolls.stream.string)
+    assert_equal '123.4ms', logged_data['measure#test-app.some-web-path']
   end
 
   # Vault::Log.time removes parameters.
   def test_time_removes_parameters
     Vault::Log.time('/some/:web/path', 123.4)
-    assert_match(/measure#some_path=123.4ms/, Scrolls.stream.string)
+    assert_equal '123.4ms', logged_data['measure#test-app.some-path']
   end
 
   # Vault::Log.time removes non-alphanumeric characters.
   def test_time_removes_non_alphanumeric_characters
     Vault::Log.time('/some/web+path', 123.4)
-    assert_match(/measure#some_webpath=123.4ms/, Scrolls.stream.string)
+    assert_equal '123.4ms', logged_data['measure#test-app.some-webpath']
   end
 
   # Vault::Log.time is a no-op if a nil name is provided.
