@@ -23,7 +23,7 @@ module Vault
       # Check request for HTTP Basic creds and
       # password matches settings.basic_password
       def authorized?
-        @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+        @auth ||= Rack::Auth::Basic::Request.new(request.env)
         @auth.provided? && @auth.basic? && @auth.credentials &&
           @auth.credentials[1] == settings.basic_password
       end
