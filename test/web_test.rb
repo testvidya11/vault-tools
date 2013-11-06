@@ -2,6 +2,8 @@ require 'helper'
 
 class WebTest < Vault::TestCase
   include Rack::Test::Methods
+  include Vault::Test::EnvironmentHelpers
+  include LoggedDataHelper
 
   # Anonymous Web Frontend
   def app
@@ -20,7 +22,7 @@ class WebTest < Vault::TestCase
     app.set :basic_password, 'password'
     app.get '/protected' do
       protected!
-      'OKIE'
+      'You may pass'
     end
 
     get '/protected'
@@ -28,7 +30,7 @@ class WebTest < Vault::TestCase
     authorize('','password')
     get '/protected'
     assert_equal 200, last_response.status
-    assert_equal 'OKIE', last_response.body
+    assert_equal 'You may pass', last_response.body
   end
 
   # Middleware is attached at load time, so we have to delete the Vault::Web
@@ -68,8 +70,9 @@ class WebTest < Vault::TestCase
     assert_equal(404, last_response.status)
   end
 
-  # An internal server error causes a `web-50` log entry to be written.  A
-  # traceback is also written to the response body to ease debugging.
+  # An `http_500` and an `http_5xx` log metric is written when an internal
+  # server error occurs.  A traceback is written to the response body to ease
+  # debugging.
   def test_error_logs_500
     get '/boom'
     assert_equal '1', logged_data['count#test-app.http.500']
@@ -79,7 +82,7 @@ class WebTest < Vault::TestCase
     assert_equal(500, last_response.status)
   end
 
-  # SSL is enforced when we are in production mode
+  # SSL is enforced by default when we're in production mode.
   def test_ssl_enforced_in_production_mode
     set_env 'RACK_ENV', 'production'
     set_env 'VAULT_TOOLS_DISABLE_SSL', nil
@@ -89,11 +92,22 @@ class WebTest < Vault::TestCase
     assert_match(/^https/, last_response.headers['Location'])
   end
 
-  # SSL isn't enforced when the VAULT_TOOLS_DISABLE_SSL environment variable
-  # has a true value.
-  def test_ssl_can_be_disabled
+  # SSL is explicitly enforced when we're in production mode and the
+  # `VAULT_TOOLS_DISABLE_SSL` environment variable is set to `false`.
+  def test_ssl_explicitly_enforced_in_production_mode
     set_env 'RACK_ENV', 'production'
-    set_env 'VAULT_TOOLS_DISABLE_SSL', '1'
+    set_env 'VAULT_TOOLS_DISABLE_SSL', 'false'
+    reload_web!
+    get '/health'
+    assert_equal(301, last_response.status)
+    assert_match(/^https/, last_response.headers['Location'])
+  end
+
+  # SSL isn't enforced when the `VAULT_TOOLS_DISABLE_SSL` environment variable
+  # is set to `true`.
+  def test_ssl_can_be_disabled_in_production_mode
+    set_env 'RACK_ENV', 'production'
+    set_env 'VAULT_TOOLS_DISABLE_SSL', 'true'
     reload_web!
     get '/health'
     assert_equal(200, last_response.status)
