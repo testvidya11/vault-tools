@@ -27,11 +27,17 @@ module Vault
   end
 
   def self.hack_time_class
-    $stderr.puts "Modifying Time#to_s to use #iso8601"
+    $stderr.puts "Modifying Time#to_s to use #iso8601..."
     # use send to call private method
     Time.send(:define_method, :to_s) do
       self.iso8601
     end
+  end
+
+  def self.override_global_config
+    $stderr.puts "Set Config to Vault::Config..."
+    Object.send(:remove_const, :Config)
+    Object.const_set(:Config, Vault::Config)
   end
 
   # all in one go
@@ -40,6 +46,7 @@ module Vault
     self.load_path
     self.set_timezones
     self.hack_time_class
+    self.override_global_config
   end
 end
 
