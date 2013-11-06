@@ -9,4 +9,26 @@ module LoggedDataHelper
   end
 end
 
+module Honeybadger
+  def self.exceptions
+    @exceptions ||= []
+  end
+
+  def self.notify(exception, opts = {})
+    self.exceptions << [exception, opts]
+  end
+end
+
+module HoneybadgerHelper
+  def setup
+    super
+    Honeybadger.exceptions.clear
+  end
+end
+
+class Vault::TestCase
+  include Vault::Test::EnvironmentHelpers
+  include HoneybadgerHelper
+end
+
 Vault.setup
