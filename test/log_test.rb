@@ -64,6 +64,11 @@ class LogTest < Vault::TestCase
     assert_equal '123.4ms', logged_data['measure#test-app.some-web-path']
   end
 
+  def test_time_replaces_underscore_with_dash
+    Vault::Log.time('/some/web_path', 123.4)
+    assert_equal '123.4ms', logged_data['measure#test-app.some-web-path']
+  end
+
   # Vault::Log.time removes parameters.
   def test_time_removes_parameters
     Vault::Log.time('/some/:web/path', 123.4)

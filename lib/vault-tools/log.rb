@@ -42,10 +42,10 @@ module Vault
     # @param duration [Fixnum] The duration to record, in milliseconds.
     def self.time(name, duration)
       if name
-        name.gsub(/\/:\w+/, '').           # Remove param names from path.
-             gsub("/", "-").               # Replace slash with dash.
-             gsub(/[^A-Za-z0-9\-\_]/, ''). # Only keep subset of chars.
-             sub(/^-/, "").                # Strip the leading dash.
+        name.gsub(/\/:\w+/, '').            # Remove param names from path.
+             gsub(/[\/_]+/, "-").           # Replace slash with dash.
+             gsub(/[^A-Za-z0-9\-\_]/, '').  # Only keep subset of chars.
+             sub(/^-+/, "").                # Strip the leading dashes.
              tap { |name| measure(name, "#{duration}ms") }
       end
     end
