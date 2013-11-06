@@ -1,6 +1,8 @@
 require 'helper'
 
 class TextProcessorTest < Vault::TestCase
+  include Vault::Test::EnvironmentHelpers
+
   def setup
     set_env 'FERNET_SECRET', 'Mcdej7RFV/yHDrs1P8mrYP9zcw4JxSyReqYyELDrRPY='
   end
