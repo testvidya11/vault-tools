@@ -24,14 +24,35 @@ module Vault
       self[name]
     end
 
+    # Set a default
+    # Defaults are supplied when accessing via Config[:varname]
+    #
+    # @param key [Symbol/String] The lower-case name of the default
+    # @return [String] The value of the default
     def self.default(key, value)
-      @@defaults[key] = value
+      @@defaults[key.to_sym] = value
     end
 
+    # Get all the defaults
+    # @return [Hash] The current set of defaults
     def self.defaults
       @@defaults
     end
 
+    # Get a Config value
+    # Uses defaults if available.  Converts upper-case ENV var names
+    # to lower-case default names.
+    #
+    # Config[:foo] == nil
+    #
+    # Config.default(:foo, 'bar')
+    # Config[:foo] == 'bar'
+    #
+    # ENV['FOO'] = 'baz'
+    # Config[:foo] == 'baz'
+    #
+    # @param key [Symbol] The lower-case name of the ENV value
+    # @return [String] The value of the ENV value or default.
     def self.[](name)
       var_name = name.to_s.upcase
       ENV[var_name] || @@defaults[name]
