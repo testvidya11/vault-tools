@@ -55,7 +55,8 @@ module Vault
     # @return [String] The value of the ENV value or default.
     def self.[](name)
       var_name = name.to_s.upcase
-      ENV[var_name] || @@defaults[name]
+      default_name = name.to_s.downcase.to_sym
+      ENV[var_name] || @@defaults[default_name]
     end
 
     # An environment variable.
