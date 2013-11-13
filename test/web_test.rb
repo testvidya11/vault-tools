@@ -82,7 +82,16 @@ class WebTest < Vault::TestCase
     assert_equal(500, last_response.status)
   end
 
-  # SSL is enforced by default when we're in production mode.
+  # Test we register errors with Honeybadger when they happen
+  def test_error_with_honeybadger
+    assert_equal(0, Honeybadger.exceptions.size)
+    get '/boom'
+    assert_equal(1, Honeybadger.exceptions.size)
+    error, opts = Honeybadger.exceptions.first
+    assert_equal(RuntimeError, error.class)
+  end
+
+  # SSL is enforced when we are in production mode
   def test_ssl_enforced_in_production_mode
     set_env 'RACK_ENV', 'production'
     set_env 'VAULT_TOOLS_DISABLE_SSL', nil

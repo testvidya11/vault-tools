@@ -4,6 +4,11 @@ require 'sinatra/base'
 require 'scrolls'
 require 'rack/ssl-enforcer'
 require 'heroku-api'
+require 'honeybadger'
+
+Honeybadger.configure do |config|
+  config.api_key = ENV['HONEYBADGER_API_KEY']
+end
 
 module Vault
   #require bundler and the proper gems for the ENV
