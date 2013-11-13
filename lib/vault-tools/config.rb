@@ -1,5 +1,7 @@
 module Vault
   module Config
+    @@defaults = {}
+
     # An environment variable from another app.
     #
     # @param app [String] The name of the app to get the value from.
@@ -19,7 +21,41 @@ module Vault
     # @return [String] The value of the environment variable or nil if no
     #   match is available.
     def self.env(name)
-      ENV[name]
+      self[name]
+    end
+
+    # Set a default
+    # Defaults are supplied when accessing via Config[:varname]
+    #
+    # @param key [Symbol/String] The lower-case name of the default
+    # @return [String] The value of the default
+    def self.default(key, value)
+      @@defaults[key.to_sym] = value
+    end
+
+    # Get all the defaults
+    # @return [Hash] The current set of defaults
+    def self.defaults
+      @@defaults
+    end
+
+    # Get a Config value
+    # Uses defaults if available.  Converts upper-case ENV var names
+    # to lower-case default names.
+    #
+    # Config[:foo] == nil
+    #
+    # Config.default(:foo, 'bar')
+    # Config[:foo] == 'bar'
+    #
+    # ENV['FOO'] = 'baz'
+    # Config[:foo] == 'baz'
+    #
+    # @param key [Symbol] The lower-case name of the ENV value
+    # @return [String] The value of the ENV value or default.
+    def self.[](name)
+      var_name = name.to_s.upcase
+      ENV[var_name] || @@defaults[name]
     end
 
     # An environment variable.
@@ -29,7 +65,7 @@ module Vault
     # @raise [RuntimeError] Raised if the environment variable is not defined.
     # @return [String] The value of the environment variable.
     def self.env!(name)
-      env(name) || raise("missing #{name}")
+      self[name] || raise("missing #{name}")
     end
 
     # The `RACK_ENV` environment variable is used to determine whether the
@@ -37,7 +73,7 @@ module Vault
     #
     # @return [Bool] True if the service is in production mode.
     def self.production?
-      env('RACK_ENV') == 'production'
+      self['RACK_ENV'] == 'production'
     end
 
     # The `RACK_ENV` environment variable is used to determine whether the
@@ -45,7 +81,7 @@ module Vault
     #
     # @return [Bool] True if the service is in test mode.
     def self.test?
-      env('RACK_ENV') == 'test'
+      self['RACK_ENV'] == 'test'
     end
 
     # The `APP_NAME` env var is used to identify which codebase is
@@ -96,7 +132,7 @@ module Vault
     # @return [Fixnum] The number or nil if the value couldn't be coerced to a
     #   Fixnum.
     def self.int(name)
-      env(name) ? env(name).to_i : nil
+      self[name] ? self[name].to_i : nil
     end
 
     # Comma-separated words converted to an array.
@@ -115,7 +151,11 @@ module Vault
     #   boolean for.
     # @return [bool] True if the value is `true`, otherwise false.
     def self.bool?(name)
-      ENV[name] == 'true'
+      self[name] == 'true'
+    end
+
+    def self.time(name)
+      Time.parse(self[name])
     end
 
     # The number of threads to use in Sidekiq workers.
