@@ -144,14 +144,6 @@ class ConfigTest < Vault::TestCase
     assert_equal(['apple', 'orange', 'cherry'], Config.array('ARRAY'))
   end
 
-  # Config.array raises a RuntimeError if the environment variable
-  # doesn't exist.
-  def test_array_with_unknown_environment_variable
-    assert_raises RuntimeError do
-      Config.array('UNKNOWN')
-    end
-  end
-
   # Config.bool?(var) is only true if the value of var is the string
   # 'true'.  If the var is absent or any other value, it evaluates to false.
   def test_bool_returns_true

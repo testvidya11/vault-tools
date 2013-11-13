@@ -143,7 +143,7 @@ module Vault
     # @raise [RuntimeError] Raised if the environment variable is not defined.
     # @return [Array] An array of values.
     def self.array(name)
-      env!(name).split(',')
+      env(name).to_s.split(',')
     end
 
     # An environment variable converted to a bool.
