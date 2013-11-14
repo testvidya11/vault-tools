@@ -11,7 +11,7 @@ task :pull_core do
   if File.exists?('contrib/core')
     steps << 'rm -rf core'
   end
-  steps << 'git clone -n git@github.com:heroku/api --depth 1'
+  steps << 'git clone -n git@github.com:heroku/api core --depth 1'
   steps << 'cd core'
   steps << 'git checkout HEAD db/structure.sql'
   # make sure we don't submodule it
