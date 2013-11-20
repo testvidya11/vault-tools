@@ -133,7 +133,7 @@ module Vault
     # @return [Fixnum] The number or nil if the value couldn't be coerced to a
     #   Fixnum.
     def self.int(name)
-      self[name] ? self[name].to_i : nil
+      self[name] && self[name].to_i
     end
 
     # Comma-separated words converted to an array.
@@ -155,8 +155,19 @@ module Vault
       self[name] == 'true'
     end
 
+    # An environment variable converted to a time.
+    #
+    # @param name [String|Symbol] The name of the environment variable to fetch a
+    #   boolean for.
+    # @return [Time] Time if the value is parseable, otherwise false.
     def self.time(name)
-      Time.parse(self[name])
+      if self[name]
+        Time.parse(self[name]) rescue Time.utc(*self[name].split('-'))
+      end
+    end
+
+    def self.uri(name)
+      self[name] && URI.parse(self[name])
     end
 
     # The number of threads to use in Sidekiq workers.
