@@ -133,6 +133,33 @@ class ConfigTest < Vault::TestCase
     assert_equal(3000, Config.int('FOO'))
   end
 
+  # Config.time returns nil or VAR as time
+  def test_time
+    assert_equal(nil, Config.time('T'))
+    set_env 'T', '2000'
+    assert_equal(Time.utc(2000), Config.time(:t))
+    set_env 'T', '2000-2'
+    assert_equal(Time.utc(2000,2), Config.time(:t))
+    set_env 'T', '2000-2-2'
+    assert_equal(Time.utc(2000,2,2), Config.time(:t))
+    set_env 'T', '2000-2-2T11:11'
+    assert_equal(Time.utc(2000,2,2,11,11), Config.time(:t))
+  end
+
+  # Config.time returns nil or VAR as URI
+  def test_uri
+    assert_equal(nil, Config.uri('URL'))
+    set_env 'URL', 'http://user:password@the-web.com/path/to/greatness?foo=bar'
+    uri = Config.uri('URL')
+    assert_equal('http', uri.scheme)
+    assert_equal('the-web.com', uri.host)
+    assert_equal('/path/to/greatness', uri.path)
+    assert_equal('foo=bar', uri.query)
+    assert_equal(80, uri.port)
+    assert_equal('user', uri.user)
+    assert_equal('password', uri.password)
+  end
+
   # Config.array loads a comma-separated list of words into an array of
   # strings.
   def test_array
