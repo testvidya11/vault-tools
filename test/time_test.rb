@@ -83,4 +83,13 @@ class TimeTest < Vault::TestCase
                  Time.utc(2000,1,1).tomorrow)
   end
 
+  def test_weeks
+    assert_equal(7*24*60*60*2,2.weeks)
+    assert_equal(7*24*60*60,1.week)
+    assert_equal(Time.utc(2000,1,8),
+                 Time.utc(2000,1,1) + 1.week)
+    assert_equal(Time.utc(2000,1,15),
+                 Time.utc(2000,1,1) + 2.weeks)
+  end
+
 end

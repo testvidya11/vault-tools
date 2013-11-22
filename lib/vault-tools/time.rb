@@ -18,12 +18,13 @@ end
 
 class Fixnum
   def weeks
-
+    self.days * 7
   end
+  alias :week :weeks
 
   def days
     self * 24 * 60 * 60
   end
-  alias :day, :days
+  alias :day :days
 end
 
