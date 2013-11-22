@@ -17,12 +17,13 @@ class Time
 end
 
 class Fixnum
+  def weeks
+
+  end
+
   def days
     self * 24 * 60 * 60
   end
-
-  def day
-    days
-  end
+  alias :day, :days
 end
 
