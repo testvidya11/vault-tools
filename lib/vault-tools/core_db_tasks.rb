@@ -7,6 +7,7 @@
 desc "Pull db/structure.sql from api HEAD"
 task :pull_core do
   steps = []
+  steps << 'mkdir -p contrib/'
   steps << 'cd contrib/'
   if File.exists?('contrib/core')
     steps << 'rm -rf core'
