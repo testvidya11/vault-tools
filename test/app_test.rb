@@ -19,6 +19,11 @@ class AppTest < Vault::TestCase
     assert_equal(1234, Vault::App.hid_to_id('app1234@heroku.com'))
   end
 
+  # App.hid_to_id converts a staging Heroku app ID into a core integer app ID.
+  def test_staging_hid_to_id
+    assert_equal(1234, Vault::App.hid_to_id('app1234@staging.herokudev.com'))
+  end
+
   # App.hid_to_id raises an ArgumentError if the specified ID doesn't match
   # the expected format.
   def test_hid_to_id_with_invalid_heroku_id

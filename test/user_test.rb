@@ -19,6 +19,11 @@ class UserTest < Vault::TestCase
     assert_equal(1234, Vault::User.hid_to_id('user1234@heroku.com'))
   end
 
+  # User.hid_to_id converts a staging Heroku user ID into a core integer user ID.
+  def test_staging_hid_to_id
+    assert_equal(1234, Vault::User.hid_to_id('user1234@staging.herokudev.com'))
+  end
+
   # User.hid_to_id raises an ArgumentError if the specified ID doesn't match
   # the expected format.
   def test_hid_to_id_with_invalid_heroku_id
