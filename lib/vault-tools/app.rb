@@ -2,6 +2,7 @@ require 'uuidtools'
 
 module Vault
   module App
+    ID_CAPTURE = /^app(\d+)\@[\w\.]+com$/
     # Convert a core app ID into a Heroku app ID.
     #
     # @param app_id [Fixnum] A core app ID.
@@ -25,7 +26,7 @@ module Vault
     # @raise [ArgumentError] Raised if a malformed Heroku ID is provided.
     # @return [Fixnum] The core app ID that uniquely represents the app.
     def self.hid_to_id(heroku_id)
-      if app_id = heroku_id.slice(/^app(\d+)\@heroku\.com$/, 1)
+      if app_id = heroku_id.slice(ID_CAPTURE, 1)
         app_id.to_i
       else
         raise ArgumentError,"#{heroku_id} is not a valid Heroku app ID."
@@ -38,7 +39,7 @@ module Vault
     # @raise [ArgumentError] Raised if a malformed Heroku ID is provided.
     # @return [String] A v5 UUID that uniquely represents the app.
     def self.hid_to_uuid(heroku_id)
-      if app_id = heroku_id.slice(/^app(\d+)\@heroku\.com$/, 1)
+      if app_id = heroku_id.slice(ID_CAPTURE, 1)
         id_to_uuid(app_id)
       else
         raise ArgumentError, "#{heroku_id} is not a valid Heroku app ID."

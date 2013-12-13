@@ -2,6 +2,7 @@ require 'uuidtools'
 
 module Vault
   module User
+    ID_CAPTURE = /^user(\d+)\@[\w\.]+com$/
     # Convert a user ID into a Heroku user ID.
     #
     # @param user_id [Fixnum] A user ID.
@@ -26,7 +27,7 @@ module Vault
     # @raise [ArgumentError] Raised if a malformed Heroku ID is provided.
     # @return [Fixnum] The core user ID that uniquely represents the user.
     def self.hid_to_id(heroku_id)
-      if user_id = heroku_id.slice(/^user(\d+)\@heroku\.com$/, 1)
+      if user_id = heroku_id.slice(ID_CAPTURE, 1)
         user_id.to_i
       else
         raise ArgumentError,"#{heroku_id} is not a valid Heroku user ID."
@@ -40,7 +41,7 @@ module Vault
     # @raise [ArgumentError] Raised if a malformed Heroku ID is provided.
     # @return [String] A v5 UUID that uniquely represents the user.
     def self.hid_to_uuid(heroku_id)
-      if user_id = heroku_id.slice(/^user(\d+)\@heroku\.com$/, 1)
+      if user_id = heroku_id.slice(ID_CAPTURE, 1)
         id_to_uuid(user_id)
       else
         raise ArgumentError,"#{heroku_id} is not a valid Heroku user ID."
