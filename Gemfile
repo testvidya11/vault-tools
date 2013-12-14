@@ -5,7 +5,6 @@ gemspec
 
 group :development do
   gem 'rake'
-  gem 'ruby-debug19'
   gem 'shotgun'
   gem 'yard-sinatra'
 end
