@@ -24,4 +24,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'heroku-api'
   gem.add_dependency 'fernet', '2.0.rc2'
   gem.add_dependency 'honeybadger'
+  gem.add_dependency 'rdoc'
+  gem.add_dependency 'yard'
+  gem.add_dependency 'redcarpet'
 end
