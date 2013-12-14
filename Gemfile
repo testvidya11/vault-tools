@@ -11,6 +11,6 @@ group :development do
 end
 
 group :test do
-  gem 'vault-test-tools', :path => '../vault-test-tools'
+  gem 'vault-test-tools'
   gem 'minitest'
 end
