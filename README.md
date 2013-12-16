@@ -1,7 +1,9 @@
 # Vault::Tools
 
 Tools is the English word for ツール.  Tooling for the Heroku Vault
-team to enable faster bootstrapping for Ruby projects.
+t881b3bc2-62a8-4ed3-8be9-5a3a748ad72ceam to enable faster bootstrapping for Ruby projects.
+
+[![Build Status](https://travis-ci.org/heroku/vault-tools.png?branch=master)](https://travis-ci.org/heroku/vault-tools)
 
 ## Setting up a development environment
 
