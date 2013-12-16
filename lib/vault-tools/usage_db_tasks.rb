@@ -5,7 +5,7 @@
 # require 'vault-tools/usage_db_tasks'
 
 desc "Pull db/vault-usage.sql from api HEAD"
-task :pull_usage do
+task :pull_usage_schema do
   steps = []
   steps << 'mkdir -p contrib/'
   steps << 'cd contrib/'

@@ -5,7 +5,7 @@
 # require 'vault-tools/core_db_tasks'
 
 desc "Pull db/structure.sql from api HEAD"
-task :pull_core do
+task :pull_core_schema do
   steps = []
   steps << 'mkdir -p contrib/'
   steps << 'cd contrib/'

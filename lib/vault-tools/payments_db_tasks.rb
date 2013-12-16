@@ -1,5 +1,5 @@
 desc "Pull db/structure.sql from payments HEAD"
-task :pull_payments do
+task :pull_payments_schema do
   steps = []
   steps << 'cd contrib/'
   if File.exists?('contrib/payments')
