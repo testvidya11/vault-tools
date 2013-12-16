@@ -21,7 +21,7 @@ task :pull_analytics do
 end
 
 desc "Drop and recreate the vault-analytics-test database"
-task :create_analytics_db => [:drop_analytics_db, :pull_analytics] do
+task :create_analytics_db => [:drop_analytics_db] do
   sh 'createdb vault-analytics-test'
   sh 'psql vault-analytics-test -f contrib/vault-analytics/db/vault-analytics.sql'
 end

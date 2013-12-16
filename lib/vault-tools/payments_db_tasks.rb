@@ -14,7 +14,7 @@ task :pull_payments do
 end
 
 desc "Drop and recreate payments-test database"
-task :create_payments_db => [:drop_payments_db, :pull_payments] do
+task :create_payments_db => [:drop_payments_db] do
   sh 'createdb payments-test'
   sh 'psql payments-test -f contrib/payments/db/structure.sql'
 end
