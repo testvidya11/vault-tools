@@ -21,7 +21,7 @@ task :pull_core do
 end
 
 desc "Drop and recreate the core-test database"
-task :create_core_db => [:drop_core_db, :pull_core] do
+task :create_core_db => [:drop_core_db] do
   sh 'createdb core-test'
   sh 'psql core-test -f contrib/core/db/structure.sql'
 end
