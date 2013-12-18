@@ -5,7 +5,7 @@
 # require 'vault-tools/analytics_db_tasks'
 
 desc "Pull db/vault-analytics.sql from api HEAD"
-task :pull_analytics do
+task :pull_analytics_schema do
   steps = []
   steps << 'mkdir -p contrib/'
   steps << 'cd contrib/'
