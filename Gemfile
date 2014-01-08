@@ -11,4 +11,5 @@ end
 
 group :test do
   gem 'vault-test-tools'
+  gem 'guard-minitest'
 end
