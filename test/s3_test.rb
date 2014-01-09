@@ -5,21 +5,31 @@ class SomeS3Consumer
 end
 
 class S3Test < Vault::TestCase
+  include LoggedDataHelper
+
   def setup
+    super
     set_env 'APP_DEPLOY', 'test'
+    set_env 'AWS_ACCESS_KEY_ID', 'fake access key id'
+    set_env 'AWS_SECRET_ACCESS_KEY', 'fake secret access key'
+    AWS.stub!
     @consumer = SomeS3Consumer.new
+  end
+
+  def log_output
+    Scrolls.stream.string
   end
 
   # S3 writes should be logged.
   def test_write_logs
-    mock(Vault::Log).log(is_a(Hash))
     @consumer.write('fake bucket', 'fake key', 'fake value')
+    assert_match /fake key/, log_output
   end
 
   # S3 reads should be logged.
   def test_read_logs
-    mock(Vault::Log).log(is_a(Hash))
     @consumer.read('fake bucket', 'fake key')
+    assert_match /fake key/, log_output
   end
 
   # Should use S3 to write to bucket

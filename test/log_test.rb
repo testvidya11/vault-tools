@@ -1,7 +1,6 @@
 require 'helper'
 
 class LogTest < Vault::TestCase
-  include Vault::Test::EnvironmentHelpers
   include LoggedDataHelper
 
   def setup
