@@ -5,7 +5,7 @@
 # require 'vault-tools/tasks'
 
 require 'vault-tools/core_db_tasks'
-require 'vault-tools/payments_db_tasks'
+require 'vault-tools/vault_db_tasks'
 require 'vault-tools/usage_db_tasks'
 require 'vault-tools/analytics_db_tasks'
 
