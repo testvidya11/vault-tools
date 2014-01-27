@@ -16,7 +16,7 @@ end
 desc "Drop and recreate vault-test database"
 task :create_vault_db => [:drop_vault_db] do
   sh 'createdb vault-test'
-  sh 'psql vault-test -f contrib/vault/db/structure.sql'
+  sh 'sequel -m contrib/vault/db/migrations postgres:///vault-test'
 end
 
 desc "Drop the vault-test database"
