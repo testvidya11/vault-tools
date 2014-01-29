@@ -14,7 +14,7 @@ module Vault
   #require bundler and the proper gems for the ENV
   def self.require
     Kernel.require 'bundler'
-    $stderr.puts "Loading #{ENV['RACK_ENV']} environment..." if ENV['DEBUG']
+    $stderr.puts "Loading #{ENV['RACK_ENV']} environment..."
     Bundler.require :default, ENV['RACK_ENV'].to_sym
   end
 
