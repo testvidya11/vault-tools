@@ -14,25 +14,25 @@ module Vault
   #require bundler and the proper gems for the ENV
   def self.require
     Kernel.require 'bundler'
-    $stderr.puts "Loading #{ENV['RACK_ENV']} environment..."
+    $stderr.puts "Loading #{ENV['RACK_ENV']} environment..." if ENV['DEBUG']
     Bundler.require :default, ENV['RACK_ENV'].to_sym
   end
 
   # adds ./lib dir to the load path
   def self.load_path
-    $stderr.puts "Adding './lib' to path..."
+    $stderr.puts "Adding './lib' to path..." if ENV['DEBUG']
     $LOAD_PATH.unshift(File.expand_path('./lib'))
   end
 
   # sets TZ to UTC and Sequel timezone to :utc
   def self.set_timezones
-    $stderr.puts "Setting timezones to UTC..."
+    $stderr.puts "Setting timezones to UTC..." if ENV['DEBUG']
     Sequel.default_timezone = :utc if defined? Sequel
     ENV['TZ'] = 'UTC'
   end
 
   def self.hack_time_class
-    $stderr.puts "Modifying Time#to_s to use #iso8601..."
+    $stderr.puts "Modifying Time#to_s to use #iso8601..." if ENV['DEBUG']
     # use send to call private method
     Time.send(:define_method, :to_s) do
       self.iso8601
@@ -40,7 +40,7 @@ module Vault
   end
 
   def self.override_global_config
-    $stderr.puts "Set Config to Vault::Config..."
+    $stderr.puts "Set Config to Vault::Config..." if ENV['DEBUG']
     Object.send(:remove_const, :Config)
     Object.const_set(:Config, Vault::Config)
   end
