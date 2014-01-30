@@ -18,6 +18,11 @@ class WebTest < Vault::TestCase
     reload_web!
   end
 
+  def teardown
+    super
+    @app = nil
+  end
+
   def test_http_basic_auth
     app.set :basic_password, 'password'
     app.get '/protected' do
@@ -28,6 +33,24 @@ class WebTest < Vault::TestCase
     get '/protected'
     assert_equal 401, last_response.status
     authorize('','password')
+    get '/protected'
+    assert_equal 200, last_response.status
+    assert_equal 'You may pass', last_response.body
+  end
+
+  def test_http_basic_auth_with_alternate_password
+    app.set :basic_password, 'password'
+    app.get '/protected' do
+      protected!('leelu-dallas-multipass')
+      'You may pass'
+    end
+
+    get '/protected'
+    assert_equal 401, last_response.status
+    authorize('','password')
+    get '/protected'
+    assert_equal 401, last_response.status
+    authorize('','leelu-dallas-multipass')
     get '/protected'
     assert_equal 200, last_response.status
     assert_equal 'You may pass', last_response.body
