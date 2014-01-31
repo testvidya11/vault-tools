@@ -10,12 +10,26 @@ class WebTest < Vault::TestCase
     @app ||= Class.new(Vault::Web)
   end
 
+  # Middleware is attached at load time, so we have to delete the Vault::Web
+  # class and reload it to simulate being loaded with different environment
+  # variables.
+  def reload_web!
+    # remove the constant to force a clean reload
+    Vault.send(:remove_const, 'Web')
+    load 'lib/vault-tools/web.rb'
+  end
+
   # Always reload the web class to eliminate test leakage
   def setup
     super
     set_env('APP_NAME', 'test-app')
     set_env('APP_DEPLOY', 'testing')
     reload_web!
+  end
+
+  def teardown
+    super
+    @app = nil
   end
 
   def test_http_basic_auth
@@ -33,13 +47,41 @@ class WebTest < Vault::TestCase
     assert_equal 'You may pass', last_response.body
   end
 
-  # Middleware is attached at load time, so we have to delete the Vault::Web
-  # class and reload it to simulate being loaded with different environment
-  # variables.
-  def reload_web!
-    # remove the constant to force a clean reload
-    Vault.send(:remove_const, 'Web')
-    load 'lib/vault-tools/web.rb'
+  def test_http_basic_auth_with_alternate_password
+    app.set :basic_password, 'password'
+    app.get '/protected' do
+      protected!('leelu-dallas-multipass')
+      'You may pass'
+    end
+
+    get '/protected'
+    assert_equal 401, last_response.status
+    authorize('','password')
+    get '/protected'
+    assert_equal 401, last_response.status
+    authorize('','leelu-dallas-multipass')
+    get '/protected'
+    assert_equal 200, last_response.status
+    assert_equal 'You may pass', last_response.body
+  end
+
+  def test_http_basic_auth_with_two_passwords
+    app.set :basic_password, 'password'
+    app.get '/protected' do
+      protected!('leelu-dallas-multipass','password')
+      'You may pass'
+    end
+
+    get '/protected'
+    assert_equal 401, last_response.status
+    authorize('','password')
+    get '/protected'
+    assert_equal 200, last_response.status
+    assert_equal 'You may pass', last_response.body
+    authorize('','leelu-dallas-multipass')
+    get '/protected'
+    assert_equal 200, last_response.status
+    assert_equal 'You may pass', last_response.body
   end
 
   # An `http_200` and an `http_2xx` log metric is written for successful

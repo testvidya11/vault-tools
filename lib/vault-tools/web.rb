@@ -13,8 +13,8 @@ module Vault
     helpers do
       # Protects an http method.  Returns 401 Not Authorized response
       # when authorized? returns false
-      def protected!
-        unless authorized?
+      def protected!(*passwords)
+        unless authorized?(passwords)
           response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
           throw(:halt, [401, "Not authorized\n"])
         end
@@ -22,10 +22,11 @@ module Vault
 
       # Check request for HTTP Basic creds and
       # password matches settings.basic_password
-      def authorized?
+      def authorized?(passwords)
+        passwords << settings.basic_password if passwords.empty?
         @auth ||= Rack::Auth::Basic::Request.new(request.env)
         @auth.provided? && @auth.basic? && @auth.credentials &&
-          @auth.credentials[1] == settings.basic_password
+          passwords.include?(@auth.credentials[1])
       end
     end
 
