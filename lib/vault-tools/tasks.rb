@@ -16,3 +16,8 @@ task :pull_schemas do
     task.invoke
   end
 end
+
+desc "Run the database migrations against DATABASE_URL"
+task :migrate do
+  sh 'bundle exec sequel -E -m db/migrations $DATABASE_URL'
+end
